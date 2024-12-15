@@ -18,10 +18,15 @@ const db = client.db(`${ASTRA_DB_API_ENDPOINT}`, {
 
 export async function POST(req: Request) {
   try {
-    const messages = await req.json();
-    // console.log(messages);
+    const { messages } = await req.json();
+    console.log(messages);
 
-    const latestMessage = messages.messages[0].content;
+    // Check if messages is defined and has at least one element
+    const latestMessage =
+      messages && messages.length > 0
+        ? messages[messages.length - 1].content
+        : "";
+
     console.log(latestMessage);
 
     let docContext = "";
@@ -55,31 +60,27 @@ export async function POST(req: Request) {
     }
 
     const prompt = `You are an AI assistant who knows everything about technology, AI, computer science, software and tech/AI startups. Use the below context to augment what you know about technology, AI, computer science, software and tech/AI startups. The context will provide you with the most recent page data from various websites.
-        If the context doesn't include the information you need, answer based on your previous knowledge and don't mention the source of your information or what the context does or doesn't include.
-        Format responses using markdown where applicable and don't return images.
-        ----------------
-        START CONTEXT
-        ${docContext}
-        END CONTEXT
-        ----------------
-        QUESTION: ${latestMessage}
-        ----------------
-        `;
+    If the context doesn't include the information you need, answer based on your previous knowledge and don't mention the source of your information or what the context does or doesn't include.
+    Format responses using markdown where applicable and don't return images.
+    ----------------
+    START CONTEXT
+    ${docContext}
+    END CONTEXT
+    ----------------
+    QUESTION: ${latestMessage}
+    ----------------
+    `;
 
-    // const response = await openai.chat.completions.create({
-    //   model: "gpt-4",
-    //   stream: true,
-    //   messages: [template, ...messages],
-    // });
-
-    const response = await model2.generateContent(prompt);
-    console.log(response.response.text());
-    
+    const result2 = await model2.generateContent(prompt);
+    console.log(result2.response.text());
 
     // Return as ReadableStream in response
-    return new Response(response.response.text(), {
-        headers: { "Content-Type": "text/plain" },
-      });
+    return new Response(
+      JSON.stringify({
+        content: result2.response.text(),
+      }),
+      { headers: { "Content-Type": "application/json" } }
+    );
 
     // function GeminiStream(response) {
     //   return new ReadableStream({
