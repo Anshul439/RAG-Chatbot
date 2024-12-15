@@ -26,6 +26,9 @@ const techData = [
   "https://www.ycombinator.com/blog/tag/yc-news",
   "https://builtin.com/tech-topics",
   "https://www.cbinsights.com/research/",
+  "https://arstechnica.com/",
+  "https://www.reddit.com/r/technology/",
+  "https://github.com/trending"
 ];
 
 const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN);

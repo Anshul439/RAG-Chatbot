@@ -1,4 +1,3 @@
-import { StreamingTextResponse } from "ai"
 import { DataAPIClient } from "@datastax/astra-db-ts";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -19,27 +18,26 @@ const db = client.db(`${ASTRA_DB_API_ENDPOINT}`, {
 
 export async function POST(req: Request) {
   try {
-
     const messages = await req.json();
     // console.log(messages);
-    
+
     const latestMessage = messages.messages[0].content;
     console.log(latestMessage);
-    
 
     let docContext = "";
-    const model = genAI.getGenerativeModel({
+    const model1 = genAI.getGenerativeModel({
       model: "text-embedding-004",
     });
+    const model2 = genAI.getGenerativeModel({
+      model: "gemini-pro",
+    });
     // console.log(model);
-    
-    const result = await model.embedContent(latestMessage);
+
+    const result = await model1.embedContent(latestMessage);
     // console.log(result);
-    
-    
 
     try {
-      const collection = await db.collection(ASTRA_DB_COLLECTION);
+      const collection = await db.collection(`${ASTRA_DB_COLLECTION}`);
       const cursor = collection.find(null, {
         sort: {
           $vector: result.embedding.values,
@@ -56,10 +54,8 @@ export async function POST(req: Request) {
       docContext = "";
     }
 
-    const template = {
-      role: "system",
-      content: `You are ab AI assistant who knows everything about technology and tech startups. Use the below context to augment what you know about technology and tech startups. the context will provide you with the most recent page data from various websites.
-        If the context doesn't include the information you need, answer based on your knowledge and don't mention the source of your information or what the context does or doesn't include.
+    const prompt = `You are an AI assistant who knows everything about technology, AI, computer science, software and tech/AI startups. Use the below context to augment what you know about technology, AI, computer science, software and tech/AI startups. The context will provide you with the most recent page data from various websites.
+        If the context doesn't include the information you need, answer based on your previous knowledge and don't mention the source of your information or what the context does or doesn't include.
         Format responses using markdown where applicable and don't return images.
         ----------------
         START CONTEXT
@@ -68,8 +64,7 @@ export async function POST(req: Request) {
         ----------------
         QUESTION: ${latestMessage}
         ----------------
-        `,
-    };
+        `;
 
     // const response = await openai.chat.completions.create({
     //   model: "gpt-4",
@@ -77,27 +72,29 @@ export async function POST(req: Request) {
     //   messages: [template, ...messages],
     // });
 
-    const response = await model.generateContentStream({
-      contents: [template, messages],
-    });
+    const response = await model2.generateContent(prompt);
+    console.log(response.response.text());
     
-    const stream = GeminiStream(response);
-    return new StreamingTextResponse(stream);
 
-    function GeminiStream(response) {
-      return new ReadableStream({
-        async start(controller) {
-          try {
-            for await (const chunk of response.stream) {
-              controller.enqueue(chunk.text());
-            }
-            controller.close();
-          } catch (error) {
-            controller.error(error);
-          }
-        },
+    // Return as ReadableStream in response
+    return new Response(response.response.text(), {
+        headers: { "Content-Type": "text/plain" },
       });
-    }
+
+    // function GeminiStream(response) {
+    //   return new ReadableStream({
+    //     async start(controller) {
+    //       try {
+    //         for await (const chunk of response.stream) {
+    //           controller.enqueue(chunk.text());
+    //         }
+    //         controller.close();
+    //       } catch (error) {
+    //         controller.error(error);
+    //       }
+    //     },
+    //   });
+    // }
   } catch (error) {
     throw error;
   }

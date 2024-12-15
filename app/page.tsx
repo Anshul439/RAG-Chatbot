@@ -4,6 +4,7 @@ import Image from "next/image";
 import logo from "./assets/logo.png";
 import { useChat } from "ai/react";
 import { Message } from "ai";
+import Bubble from "@/components/Bubble";
 import PromptSuggestionsRow from "@/components/PromptSuggestionsRow";
 import LoadingBubble from "@/components/LoadingBubble";
 
@@ -34,7 +35,7 @@ export default function Home() {
       <section className={noMessages ? "" : "populated"}>
         {noMessages ? (
           <>
-            <p className="text-white">
+            <p className="starter-text">
               The Ultimate place for all things tech! Ask techbot anything about
               tech like the latest technological trends, tech startups, etc, and
               it will come back with the most up-to-date answers. We hope you
@@ -45,19 +46,23 @@ export default function Home() {
           </>
         ) : (
           <>
-            {messages}
+            {messages.map((message, index) => (
+              <Bubble key={`message-${index}`} message={message} />
+            ))}
+
             {isLoading && <LoadingBubble />}
           </>
         )}
-        <form onSubmit={handleSubmit}>
-          <input
-            onChange={handleInputChange}
-            value={input}
-            placeholder="Ask me something..."
-          />
-          <input type="submit" />
-        </form>
       </section>
+      <form onSubmit={handleSubmit}>
+        <input
+          className="question-box"
+          onChange={handleInputChange}
+          value={input}
+          placeholder="Ask me something..."
+        />
+        <input type="submit" />
+      </form>
     </main>
   );
 }
