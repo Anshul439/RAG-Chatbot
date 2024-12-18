@@ -43,12 +43,13 @@ export async function POST(req: Request) {
 
     try {
       const collection = await db.collection(`${ASTRA_DB_COLLECTION}`);
-      const cursor = collection.find(null, {
+      const cursor = collection.find({}, {
         sort: {
           $vector: result.embedding.values,
         },
         limit: 10,
       });
+      
 
       const documents = await cursor.toArray();
       const docsMap = documents?.map((doc) => doc.text);

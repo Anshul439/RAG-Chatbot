@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import logo from "./assets/logo.png";
 import ChatMessage from "@/components/ChatMessage";
-import PromptSuggestionsRow from "@/components/PromptSuggestionsRow";
+// import PromptSuggestionsRow from "@/components/PromptSuggestionsRow";
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
@@ -14,14 +14,14 @@ export default function Home() {
 
   const noMessages = messages.length === 0;
 
-  const handlePrompt = (promptText) => {
-    const newMessage = {
-      id: crypto.randomUUID(),
-      content: promptText,
-      role: "user",
-    };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
+  // const handlePrompt = (promptText) => {
+  //   const newMessage = {
+  //     id: crypto.randomUUID(),
+  //     content: promptText,
+  //     role: "user",
+  //   };
+  //   setMessages((prevMessages) => [...prevMessages, newMessage]);
+  // };
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
@@ -83,7 +83,7 @@ export default function Home() {
               tech like the latest technological trends, tech startups, etc, and
               it will come back with the most up-to-date answers. We hope you
               enjoy! */}
-              Hey! Anshul doesn't have a portfolio so if you want to know about him, you can ask me. I am his assistant.
+              Hey! Anshul doesn&apos;t have a portfolio so if you want to know about him, you can ask me. I am his assistant.
             </p>
             <br />
             {/* <PromptSuggestionsRow onPromptClick={handlePrompt} /> */}
