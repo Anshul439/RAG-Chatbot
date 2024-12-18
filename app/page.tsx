@@ -1,37 +1,33 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FormEvent, ChangeEvent } from "react";
 import logo from "./assets/logo.png";
 import ChatMessage from "@/components/ChatMessage";
-// import PromptSuggestionsRow from "@/components/PromptSuggestionsRow";
+
+interface Message {
+  id: string;
+  content: string;
+  role: "user" | "assistant";
+}
 
 export default function Home() {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const chatContainerRef = useRef(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   const noMessages = messages.length === 0;
 
-  // const handlePrompt = (promptText) => {
-  //   const newMessage = {
-  //     id: crypto.randomUUID(),
-  //     content: promptText,
-  //     role: "user",
-  //   };
-  //   setMessages((prevMessages) => [...prevMessages, newMessage]);
-  // };
-
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setInput("");
 
-    const newMessage = {
+    const newMessage: Message = {
       id: crypto.randomUUID(),
       content: input,
       role: "user",
@@ -50,7 +46,7 @@ export default function Home() {
         throw new Error("Failed to fetch response from the server");
       }
 
-      const assistantMessage = await response.json();
+      const assistantMessage: Message = await response.json();
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
     } catch (error) {
       console.error("Error:", error);
@@ -79,14 +75,9 @@ export default function Home() {
         {noMessages ? (
           <div className="text-center text-gray-400">
             <p>
-              {/* The Ultimate place for all things tech! Ask techbot anything about
-              tech like the latest technological trends, tech startups, etc, and
-              it will come back with the most up-to-date answers. We hope you
-              enjoy! */}
-              Hey! Anshul doesn&apos;t have a portfolio so if you want to know about him, you can ask me. I am his assistant.
+              Hey! Anshul doesn&apos;t have a portfolio so if you want to know
+              about him, you can ask me. I am his assistant.
             </p>
-            <br />
-            {/* <PromptSuggestionsRow onPromptClick={handlePrompt} /> */}
           </div>
         ) : (
           messages.map((message, index) => (

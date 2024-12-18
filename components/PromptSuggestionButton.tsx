@@ -1,6 +1,12 @@
 import React from "react";
 
-const PromptSuggestionButton = ({ text, onClick }) => {
+// Define the types for the props
+interface PromptSuggestionButtonProps {
+  text: string;
+  onClick: () => void;
+}
+
+const PromptSuggestionButton: React.FC<PromptSuggestionButtonProps> = ({ text, onClick }) => {
   return (
     <button onClick={onClick}>
       {text}
