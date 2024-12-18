@@ -1,16 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 import logo from "./assets/logo.png";
-import { useState } from "react";
-import Bubble from "@/components/Bubble";
+import ChatMessage from "@/components/ChatMessage";
 import PromptSuggestionsRow from "@/components/PromptSuggestionsRow";
-import LoadingBubble from "@/components/LoadingBubble";
 
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const chatContainerRef = useRef(null);
 
   const noMessages = messages.length === 0;
 
@@ -29,8 +29,8 @@ export default function Home() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setInput("");
 
-    // Add user message to the state
     const newMessage = {
       id: crypto.randomUUID(),
       content: input,
@@ -38,7 +38,6 @@ export default function Home() {
     };
     setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-    // Send the message to the server for response
     setIsLoading(true);
     try {
       const response = await fetch("/api/chat", {
@@ -52,52 +51,67 @@ export default function Home() {
       }
 
       const assistantMessage = await response.json();
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        assistantMessage, // Add assistant's response
-      ]);
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
     } catch (error) {
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
     }
-
-    // Clear the input field after submission
-    setInput("");
   };
 
+  // Scroll to the bottom when messages change
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <main>
-      <Image className="mr-20" src={logo} width={80} alt="logo" />
-      <section className={noMessages ? "" : "populated"}>
+    <main className="flex flex-col items-center min-h-screen bg-gray-900 text-gray-100 p-4">
+      <Image src={logo} width={80} alt="logo" className="mb-4" />
+
+      <section
+        ref={chatContainerRef}
+        className="w-full max-w-3xl flex-grow bg-gray-800 rounded-lg shadow overflow-y-scroll p-4 mb-4"
+        style={{ height: "500px" }}
+      >
         {noMessages ? (
-          <>
-            <p className="starter-text">
-              The Ultimate place for all things tech! Ask techbot anything about
+          <div className="text-center text-gray-400">
+            <p>
+              {/* The Ultimate place for all things tech! Ask techbot anything about
               tech like the latest technological trends, tech startups, etc, and
               it will come back with the most up-to-date answers. We hope you
-              enjoy!
+              enjoy! */}
+              Hey! Anshul doesn't have a portfolio so if you want to know about him, you can ask me. I am his assistant.
             </p>
             <br />
-            <PromptSuggestionsRow onPromptClick={handlePrompt} />
-          </>
+            {/* <PromptSuggestionsRow onPromptClick={handlePrompt} /> */}
+          </div>
         ) : (
-          <>
-            {messages.map((message, index) => (
-              <Bubble key={`message-${index}`} message={message} />
-            ))}
-            {isLoading && <LoadingBubble />}
-          </>
+          messages.map((message, index) => (
+            <ChatMessage key={`message-${index}`} message={message} />
+          ))
         )}
       </section>
-      <form onSubmit={handleSubmit}>
+
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center w-full max-w-lg bg-gray-800 rounded-lg shadow p-2 space-x-2"
+      >
         <input
-          className="question-box"
           onChange={handleInputChange}
           value={input}
           placeholder="Ask me something..."
+          className="flex-grow p-2 bg-gray-700 text-gray-100 placeholder-gray-400 border border-gray-600 rounded-l focus:outline-none focus:ring focus:ring-blue-500"
         />
-        <input type="submit" />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-r hover:bg-blue-700 disabled:bg-gray-600"
+          disabled={isLoading}
+        >
+          {isLoading ? "Loading..." : "Send"}
+        </button>
       </form>
     </main>
   );

@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       model: "text-embedding-004",
     });
     const model2 = genAI.getGenerativeModel({
-      model: "gemini-pro",
+      model: "gemini-1.5-flash",
     });
     // console.log(model);
 
@@ -55,20 +55,20 @@ export async function POST(req: Request) {
 
       docContext = JSON.stringify(docsMap);
     } catch (error) {
-      console.log("Error querying db...");
+      console.log("Error querying db...", error);
       docContext = "";
     }
 
-    const prompt = `You are an AI assistant who knows everything about technology, AI, computer science, software and tech/AI startups. Use the below context to augment what you know about technology, AI, computer science, software and tech/AI startups. The context will provide you with the most recent page data from various websites.
-    If the context doesn't include the information you need, answer based on your previous knowledge and don't mention the source of your information or what the context does or doesn't include.
-    Format responses using markdown where applicable and don't return images.
-    ----------------
-    START CONTEXT
-    ${docContext}
-    END CONTEXT
-    ----------------
-    QUESTION: ${latestMessage}
-    ----------------
+    const prompt = `You are an AI assistant with detailed knowledge of Anshul Wadhwa. Use the following context to enhance your responses about Anshul Wadhwa. The context will include the most recent data gathered from various sources.  
+If the context does not contain the required information, respond based on your prior knowledge without referencing the source of the information.  
+Format all responses using markdown where appropriate and avoid returning images.  
+----------------  
+START CONTEXT  
+${docContext}  
+END CONTEXT  
+----------------  
+QUESTION: ${latestMessage}  
+----------------
     `;
 
     const result2 = await model2.generateContent(prompt);

@@ -19,16 +19,25 @@ const {
 const genAI = new GoogleGenerativeAI(`${GEMINI_API_KEY}`);
 
 const techData = [
-  "https://techcrunch.com/",
-  "https://news.crunchbase.com/",
-  "https://venturebeat.com/",
-  "https://indianexpress.com/section/technology/",
-  "https://www.ycombinator.com/blog/tag/yc-news",
-  "https://builtin.com/tech-topics",
-  "https://www.cbinsights.com/research/",
-  "https://arstechnica.com/",
-  "https://www.reddit.com/r/technology/",
-  "https://github.com/trending"
+  // "https://techcrunch.com/",
+  // "https://news.crunchbase.com/",
+  // "https://venturebeat.com/",
+  // "https://indianexpress.com/section/technology/",
+  // "https://www.ycombinator.com/blog/tag/yc-news",
+  // "https://builtin.com/tech-topics",
+  // "https://www.cbinsights.com/research/",
+  // "https://arstechnica.com/",
+  // "https://growthlist.co/funded-startups/",
+  // "https://topstartups.io/",
+  // "https://news.crunchbase.com/unicorn-company-list/",
+  // "https://topstartups.io/?hq_location=India",
+  // "https://wellfound.com/startups/location/india"
+  // "https://www.linkedin.com/in/anshul-wadhwa/",
+  "https://chatgpt.com/share/6760175a-a730-800e-81d5-60d880e94a4f",
+  "https://docs.google.com/document/d/1xr74P4L_8DI7RHX4MPm-HQPHjGK5kQJfK4fHld9JJ4g/edit?tab=t.0",
+  "https://github.com/Anshul439",
+  "https://x.com/Anshul_439",
+  "https://drive.google.com/file/d/1EQACuEBgcRl7yMuFFOTa-f5E2PKcRwYR/view"
 ];
 
 const client = new DataAPIClient(ASTRA_DB_APPLICATION_TOKEN);
