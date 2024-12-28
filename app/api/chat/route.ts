@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       docContext = "";
     }
 
-    const prompt = `You are an AI assistant with detailed knowledge of Anshul Wadhwa. Use the following context to enhance your responses about Anshul Wadhwa. The context will include the most recent data gathered from various sources.  
+    const prompt = `You are an AI assistant with detailed knowledge of Anshul Wadhwa, his work experience and projects. Use the following context to enhance your responses about Anshul Wadhwa. The context will include the most recent data gathered from various sources, like github, resume, twitter, etc.  
 If the context does not contain the required information, respond based on your prior knowledge without referencing the source of the information.  
 Format all responses using markdown where appropriate and avoid returning images.  
 ----------------  

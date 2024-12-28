@@ -75,7 +75,7 @@ export default function Home() {
         {noMessages ? (
           <div className="text-center text-gray-400">
             <p>
-              Hey! Anshul doesn&apos;t have a portfolio so if you want to know
+              Hey! Anshul doesn&apos;t have a portfolio, so if you want to know
               about him, you can ask me. I am his assistant.
             </p>
           </div>
@@ -88,7 +88,7 @@ export default function Home() {
 
       <form
         onSubmit={handleSubmit}
-        className="flex items-center w-full max-w-lg bg-gray-800 rounded-lg shadow p-2 space-x-2"
+        className="flex items-center w-full max-w-3xl bg-gray-800 rounded-lg shadow p-2 space-x-2"
       >
         <input
           onChange={handleInputChange}
