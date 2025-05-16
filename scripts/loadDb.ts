@@ -3,7 +3,6 @@ import { PuppeteerWebBaseLoader } from "langchain/document_loaders/web/puppeteer
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import "dotenv/config";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import axios from "axios";
 
 type SimilarityMetric = "dot_product" | "cosine" | "euclidean";
 
@@ -24,12 +23,13 @@ const db = client.db(`${ASTRA_DB_API_ENDPOINT}`, {
 });
 
 const myData: string[] = [
+  "https://docs.google.com/document/d/1FOGOitjEXLM4jhYhqlUelgqW0Y52jhMoDr_G-C6TCX8/edit?usp=sharing"
   // "https://www.linkedin.com/in/anshul-wadhwa/",
-  "https://docs.google.com/document/d/1xr74P4L_8DI7RHX4MPm-HQPHjGK5kQJfK4fHld9JJ4g/edit?tab=t.0",
-  "https://docs.google.com/document/d/12rVMmKEgxg_aMCYGBzIFeTXyyHuPcxF3gONdiKCQPJg/edit?tab=t.0",
-  "https://github.com/Anshul439",
-  "https://x.com/Anshul_439",
-  "https://drive.google.com/file/d/1EQACuEBgcRl7yMuFFOTa-f5E2PKcRwYR/view",
+  // "https://docs.google.com/document/d/1xr74P4L_8DI7RHX4MPm-HQPHjGK5kQJfK4fHld9JJ4g/edit?tab=t.0",
+  // "https://docs.google.com/document/d/12rVMmKEgxg_aMCYGBzIFeTXyyHuPcxF3gONdiKCQPJg/edit?tab=t.0",
+  // "https://github.com/Anshul439",
+  // "https://x.com/Anshul_439",
+  // "https://drive.google.com/file/d/1EQACuEBgcRl7yMuFFOTa-f5E2PKcRwYR/view",
 ];
 
 const splitter = new RecursiveCharacterTextSplitter({

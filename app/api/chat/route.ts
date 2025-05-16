@@ -23,7 +23,9 @@ export async function POST(req: Request) {
 
     let docContext = "";
     const model1 = genAI.getGenerativeModel({ model: "text-embedding-004" });
-    const model2 = genAI.getGenerativeModel({ model: "gemini-pro" });
+    console.log(model1);
+    
+    const model2 = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const result = await model1.embedContent(latestMessage);
 
