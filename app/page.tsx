@@ -5,8 +5,8 @@ import Chat from "@/components/Chat";
 export default function Home() {
   return (
     <main className="flex flex-col items-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 p-2 sm:p-4">
-      <div className="w-full max-w-4xl">
-        {/* Header - stays server-rendered */}
+      <div className="w-full max-w-4xl mx-2 sm:mx-4">
+        {/* Header */}
         <header className="flex items-center justify-center space-x-2 sm:space-x-4 mb-2 sm:mb-4 p-2 sm:p-4">
           <Image
             src={logo}
@@ -20,7 +20,7 @@ export default function Home() {
           </h1>
         </header>
 
-        {/* Chat component - client-side */}
+        {/* Chat component */}
         <Chat />
       </div>
     </main>

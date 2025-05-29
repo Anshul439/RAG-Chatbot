@@ -1,6 +1,13 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef, FormEvent, ChangeEvent, KeyboardEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  FormEvent,
+  ChangeEvent,
+  KeyboardEvent,
+} from "react";
 import { Send, Loader2 } from "lucide-react";
 import ChatMessage from "@/components/ChatMessage";
 import LoadingMessage from "@/components/LoadingMessage";
@@ -23,7 +30,10 @@ export default function Chat() {
     setInput(event.target.value);
     if (inputRef.current) {
       inputRef.current.style.height = "inherit";
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+      inputRef.current.style.height = `${Math.min(
+        inputRef.current.scrollHeight,
+        150
+      )}px`;
     }
   };
 
@@ -61,10 +71,15 @@ export default function Chat() {
     }
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement> | KeyboardEvent<HTMLTextAreaElement>) => {
-    setInput("");
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement> | KeyboardEvent<HTMLTextAreaElement>
+  ) => {
     event.preventDefault();
-    await sendMessage(input);
+    if (!input.trim()) return;
+
+    const currentInput = input;
+    setInput("");
+    await sendMessage(currentInput);
   };
 
   const handleKeyPress = (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -84,7 +99,10 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <div className="w-full max-w-4xl flex flex-col h-screen">
+    <div
+      className="w-full flex flex-col"
+      style={{ height: "calc(100vh - 120px)" }}
+    >
       {/* Chat Container */}
       <div
         ref={chatContainerRef}
@@ -100,7 +118,7 @@ export default function Chat() {
         ) : (
           <div className="space-y-2 sm:space-y-4">
             {messages.map((message, index) => (
-              <ChatMessage 
+              <ChatMessage
                 key={message.id || `fallback-key-${index}`}
                 message={message}
               />
@@ -120,25 +138,31 @@ export default function Chat() {
           value={input}
           onChange={handleInputChange}
           onKeyDown={handleKeyPress}
-          placeholder="Type your message..."
-          className="w-full px-3 py-2 pr-10 bg-gray-700/50 text-gray-100 placeholder-gray-400 
-            border border-gray-600 rounded-lg resize-none min-h-[44px] max-h-[200px] text-sm sm:text-base
-            focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50
-            transition-all duration-200 break-words overflow-wrap-anywhere"
+          placeholder={
+            isLoading
+              ? "Please wait for the response..."
+              : "Type your message..."
+          }
+          disabled={isLoading}
+          className={`w-full px-3 py-2 pr-10 bg-gray-700/50 text-gray-100 placeholder-gray-400 
+    border border-gray-600 rounded-lg resize-none min-h-[44px] max-h-[150px] text-sm sm:text-base
+    focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50
+    transition-all duration-200 break-words overflow-wrap-anywhere
+    ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
           rows={1}
         />
-        <button
-          type="submit"
-          disabled={isLoading || !input.trim()}
-          className="absolute right-4 bottom-4 p-1 sm:p-2 text-blue-400 hover:text-blue-300 
-            disabled:text-gray-500 transition-colors duration-200"
-        >
-          {isLoading ? (
-            <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-          ) : (
-            <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-          )}
-        </button>
+<button
+  type="submit"
+  disabled={isLoading || !input.trim()}
+  className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1 sm:p-2 text-blue-400 hover:text-blue-300 
+    disabled:text-gray-500 transition-colors duration-200"
+>
+  {isLoading ? (
+    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+  ) : (
+    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+  )}
+</button>
       </form>
     </div>
   );
